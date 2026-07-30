@@ -11,12 +11,10 @@ public class ResourceTest {
     void getResource_ShouldCreateOneInstanceAndGiveOnlyIt() throws InterruptedException, ExecutionException {
         ExecutorService executorService = Executors.newFixedThreadPool(4);
 
-        int id = 1;
-
-        Runnable task1 = (() -> Resource.getResource(id));
-        Runnable task2 = (() -> Resource.getResource(id));
-        Runnable task3 = (() -> Resource.getResource(id));
-        Runnable task4 = (() -> Resource.getResource(id));
+        Runnable task1 = (() -> Resource.getResource(1));
+        Runnable task2 = (() -> Resource.getResource(2));
+        Runnable task3 = (() -> Resource.getResource(3));
+        Runnable task4 = (() -> Resource.getResource(4));
 
         Future<?> result1 = executorService.submit(task1);
         Future<?> result2 = executorService.submit(task2);

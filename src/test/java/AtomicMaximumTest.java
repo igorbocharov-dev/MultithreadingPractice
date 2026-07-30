@@ -1,6 +1,9 @@
 import Task1.AtomicMaximum;
 import org.junit.jupiter.api.RepeatedTest;
-import support.ThreadWorker;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.stream.LongStream.rangeClosed;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,7 +25,17 @@ public class AtomicMaximumTest {
         Runnable task3 = (() -> rangeClosed(0, count2).forEach(i -> atomicMaximum.submit(i)));
         Runnable task4 = (() -> rangeClosed(0, count3).forEach(i -> atomicMaximum.submit(i)));
 
-        ThreadWorker.work(task1, task2, task3, task4);
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        executorService.submit(task1);
+        executorService.submit(task2);
+        executorService.submit(task3);
+        executorService.submit(task4);
+
+        executorService.shutdown();
+
+        if(!executorService.awaitTermination(1, TimeUnit.SECONDS)){
+            executorService.shutdownNow();
+        }
 
         assertEquals(max, atomicMaximum.getMax());
     }
